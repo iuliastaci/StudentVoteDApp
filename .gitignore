@@ -6,6 +6,8 @@ node_modules
 /artifacts
 /build
 /dist
+/log
+*log
 
 # TypeChain files
 /typechain
