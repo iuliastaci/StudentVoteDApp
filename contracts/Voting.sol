@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Voting {
-    struct Candidate {
-        string name;
-        uint256 voteCount;
-    }
+interface ICandidateRegistry {
+    function getCandidatesCount() external view returns (uint256);
+    function getCandidate(uint256 index) external view returns (string memory name, uint256 voteCount);
+    function incrementVote(uint256 index) external;
+}
 
+contract Voting {
     address public owner;
-    Candidate[] public candidates;
+    address public candidateRegistryAddress;
     mapping(address => bool) public hasVoted;
     uint256 public votingDeadline;
 
-    event CandidateAdded(string name);
     event Voted(address voter, uint256 candidateIndex);
     event WinnerDeclared(string name, uint256 voteCount);
 
@@ -26,60 +26,69 @@ contract Voting {
         _;
     }
 
-    constructor(uint256 votingDuration) {
+    constructor(uint256 votingDuration, address _candidateRegistryAddress) {
         owner = msg.sender; // Setează proprietarul contractului
         votingDeadline = block.timestamp + votingDuration; // Definește durata votului
+        candidateRegistryAddress = _candidateRegistryAddress; 
     }
 
-    // Adaugă un candidat
-    function addCandidate(string memory name) public onlyOwner {
-        candidates.push(Candidate(name, 0));
-        emit CandidateAdded(name); // Emite evenimentul pentru un candidat nou
-    }
-
-    // Obtine numarul de candidati
-    function getCandidatesCount() public view returns (uint256) {
-        return candidates.length;
-    }
-
-    // Obtine ldetaliile candidatului
-    function getCandidate(uint256 index) public view returns (string memory name, uint256 voteCount) {
-        require(index < candidates.length, "Invalid candidate index.");
-        return (candidates[index].name, candidates[index].voteCount);
+    // Obtine detaliile candidatului
+    function getCandidateDetails(uint256 index) public view returns (string memory name, uint256 voteCount) {
+        ICandidateRegistry candidateRegistry = ICandidateRegistry(candidateRegistryAddress);
+        return candidateRegistry.getCandidate(index);
     }
 
     // Votează pentru un candidat
     function vote(uint256 candidateIndex) public payable onlyDuringVoting {
         require(msg.value == 0.01 ether, "Voting requires 0.01 ETH."); // Taxă pentru vot
         require(!hasVoted[msg.sender], "Already voted."); // Verifică dacă a votat deja
-        require(candidateIndex < candidates.length, "Invalid candidate."); // Verifică validitatea candidatului
+        
+        ICandidateRegistry candidateRegistry = ICandidateRegistry(candidateRegistryAddress);
+        require(candidateIndex < candidateRegistry.getCandidatesCount(), "Invalid candidate index."); // Verifică dacă indexul candidatului este valid
 
-        candidates[candidateIndex].voteCount += 1; // Crește numărul de voturi pentru candidat
+        candidateRegistry.incrementVote(candidateIndex); // Incrementarea numărului de voturi pentru candidat
         hasVoted[msg.sender] = true; // Marchează utilizatorul ca fiind votat
 
         emit Voted(msg.sender, candidateIndex); // Emite evenimentul de vot
     }
 
     // Obține lista candidaților și rezultatele
-    function getResults() public view returns (Candidate[] memory) {
-        return candidates;
+    function getResults() public view returns (string[] memory names, uint256[] memory voteCounts) {
+        ICandidateRegistry candidateRegistry = ICandidateRegistry(candidateRegistryAddress);
+        uint256 candidatesCount = candidateRegistry.getCandidatesCount();
+
+        names = new string[](candidatesCount);
+        voteCounts = new uint256[](candidatesCount);
+
+        for(uint256 i = 0; i < candidatesCount; i++) {
+            (string memory name, uint256 voteCount) = candidateRegistry.getCandidate(i);
+            names[i] = name;
+            voteCounts[i] = voteCount;
+        }
+        
+        return (names, voteCounts);
     }
 
     // Obține candidatul câștigător
     function getWinner() public view returns (string memory winnerName, uint256 winnerVoteCount) {
-        require(candidates.length > 0, "No candidates available."); // Verifică dacă există candidați
+        ICandidateRegistry candidateRegistry = ICandidateRegistry(candidateRegistryAddress);
+        uint256 candidatesCount = candidateRegistry.getCandidatesCount();
+
+        require(candidatesCount > 0, "No candidates available."); // Verifică dacă există candidați
         
         uint256 highestVoteCount = 0;
         uint256 winnerIndex = 0;
 
-        for (uint256 i = 0; i < candidates.length; i++) {
-            if (candidates[i].voteCount > highestVoteCount) {
-                highestVoteCount = candidates[i].voteCount;
+        for (uint256 i = 0; i < candidatesCount; i++) {
+            (, uint256 voteCount) = candidateRegistry.getCandidate(i);
+            if (voteCount > highestVoteCount) {
+                highestVoteCount = voteCount;
                 winnerIndex = i;
             }
         }
 
-        return (candidates[winnerIndex].name, candidates[winnerIndex].voteCount); // Returnează câștigătorul
+        (winnerName, winnerVoteCount) = candidateRegistry.getCandidate(winnerIndex);
+        return (winnerName, winnerVoteCount); // Returnează câștigătorul
     }
 
     // Declară candidatul câștigător și emite evenimentul
