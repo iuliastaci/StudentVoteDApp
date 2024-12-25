@@ -1,13 +1,7 @@
-export const CONTRACT_ADDRESS = "0x80f1EB2297f953Fc65d596dc674D095fFd1Afacc";
-export const ABI =[
+export const CANDIDATE_CONTRACT_ADDRESS = "0x80Ea71B3a607B9Ad80B58817e67F3F157E717300";
+export const CANDIDATE_ABI = [
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "votingDuration",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -22,44 +16,6 @@ export const ABI =[
       }
     ],
     "name": "CandidateAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "candidateIndex",
-        "type": "uint256"
-      }
-    ],
-    "name": "Voted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voteCount",
-        "type": "uint256"
-      }
-    ],
-    "name": "WinnerDeclared",
     "type": "event"
   },
   {
@@ -100,13 +56,6 @@ export const ABI =[
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "declareWinner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -144,25 +93,145 @@ export const ABI =[
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "incrementVote",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
+export const VOTING_CONTRACT_ADDRESS = "0x08115Af50434e33f3f4337B8BFe8F6774651B0Ab";
+export const VOTING_ABI =[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "votingDuration",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_candidateRegistryAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "voter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "candidateIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "Voted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "voteCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "WinnerDeclared",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "candidateRegistryAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "declareWinner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCandidateDetails",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "voteCount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getResults",
     "outputs": [
       {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "voteCount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Voting.Candidate[]",
-        "name": "",
-        "type": "tuple[]"
+        "internalType": "string[]",
+        "name": "names",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "voteCounts",
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
