@@ -1,4 +1,4 @@
-export const CANDIDATE_CONTRACT_ADDRESS = "0x80Ea71B3a607B9Ad80B58817e67F3F157E717300";
+export const CANDIDATE_CONTRACT_ADDRESS = "0xE125D959022222F82f576D5fe96C64522d2f6273";
 export const CANDIDATE_ABI = [
   {
     "inputs": [],
@@ -119,7 +119,7 @@ export const CANDIDATE_ABI = [
     "type": "function"
   }
 ];
-export const VOTING_CONTRACT_ADDRESS = "0x08115Af50434e33f3f4337B8BFe8F6774651B0Ab";
+export const VOTING_CONTRACT_ADDRESS = "0xd3d49C4fa0251Aba3a92B1F5243609691Ee247C6";
 export const VOTING_ABI =[
   {
     "inputs": [
