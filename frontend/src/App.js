@@ -14,6 +14,7 @@ const App = () => {
     const [isAdmin, setIsAdmin] = useState(false); // Stare pentru a verifica dacă utilizatorul este admin
     const [newCandidate, setNewCandidate] = useState("");
     const [owner, setOwner] = useState(null);
+    const [walletBalance, setWalletBalance] = useState(null);
 
 
     // Conectează-te la MetaMask
@@ -42,6 +43,9 @@ const App = () => {
             
             const signerAddress = await signerInstance.getAddress();
             setWalletAddress(signerAddress);
+            
+            const balance = await providerInstance.getBalance(signerAddress);
+            setWalletBalance(ethers.utils.formatEther(balance));
 
             console.log("Provider:", providerInstance);
             console.log("Signer:", signer);
@@ -147,7 +151,10 @@ const App = () => {
         <div style={{ padding: "20px" }}>
             <h1>Decentralized Voting App</h1>
             {walletAddress ? (
-                <p>Connected wallet: <strong>{walletAddress}</strong></p>
+                <p>
+                    Connected wallet: <strong>{walletAddress}</strong><br />
+                    Balance: <strong>{walletBalance}</strong>
+                </p>
             ) : (
                 <button onClick={connectWallet}>Connect Wallet</button>
             )}
