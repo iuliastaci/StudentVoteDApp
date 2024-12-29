@@ -11,6 +11,7 @@ contract Voting {
     address public owner;
     address public candidateRegistryAddress;
     mapping(address => bool) public hasVoted;
+    mapping(address => uint256) public votedCandidateIndex;
     uint256 public votingDeadline;
 
     event Voted(address voter, uint256 candidateIndex);
@@ -50,11 +51,17 @@ contract Voting {
 
         candidateRegistry.incrementVote(candidateIndex); // Incrementarea numărului de voturi pentru candidat
         hasVoted[msg.sender] = true; // Marchează utilizatorul ca fiind votat
+        votedCandidateIndex[msg.sender] = candidateIndex; // Salvează indexul candidatului pentru utilizator
 
         uint spentGas = startGas - gasleft();
         require(spentGas <= 500000, "This transaction consumes too much gas.");
         
         emit Voted(msg.sender, candidateIndex); // Emite evenimentul de vot
+    }
+
+    function getVotedCandidateIndex(address voter) public view returns (uint256) {
+        require(hasVoted[voter], "Voter has not voted yet.");
+        return votedCandidateIndex[voter];        
     }
 
     // Obține lista candidaților și rezultatele
