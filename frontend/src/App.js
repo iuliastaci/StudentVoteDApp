@@ -20,8 +20,19 @@ const App = () => {
     const [owner, setOwner] = useState(null);
     const [network, setNetwork] = useState(null);
     const [transactionInProgress, setTransactionInProgress] = useState(false);
-    const [networkError, setNetworkError] = useState(false);
+    const [networkError, setNetworkError] = useState("");
 
+    const handleError = (error, customMessage) => {
+        console.error(customMessage, error);
+        let errorMessage = customMessage;
+        if (error.data && error.data.message) {
+            errorMessage += `\nDetails: ${error.data.message}`;
+        } else if (error.message) {
+            errorMessage += `\nDetails: ${error.message}`;
+        }
+        alert(errorMessage);
+    };
+    
     // Connect to MetaMask
     const connectWallet = async () => {
         try {
@@ -57,27 +68,13 @@ const App = () => {
                     fetchCandidates(candidateContractInstance);
                     checkVotingStatus(votingContractInstance, signerAddress);
                 } catch (error) {
-                    console.error("Error accessing contract data:", error);
-                    let errorMessage = "An error occurred while accessing contract data.";
-                    if (error.data && error.data.message) {
-                        errorMessage += `\n\nDetails: ${error.data.message}`;
-                    } else if (error.message) {
-                        errorMessage += `\n\nDetails: ${error.message}`;
-                    }
-                    alert(errorMessage);
+                    handleError(error, "Error accessing contract data.");
                 }
             } else {
                 alert("Please install MetaMask to use this app.");
             }
         } catch (error) {
-            console.error("Error connecting to wallet:", error);
-            let errorMessage = "An error occurred while connecting to the wallet.";
-            if (error.data && error.data.message) {
-                errorMessage += `\n\nDetails: ${error.data.message}`;
-            } else if (error.message) {
-                errorMessage += `\n\nDetails: ${error.message}`;
-            }
-            alert(errorMessage);  
+            handleError(error, "Error connecting to wallet."); 
         }
     };
 
@@ -96,14 +93,7 @@ const App = () => {
             setCandidates(candidatesArray);
             setLoading(false);
         } catch (error) {
-            console.error("Error fetching candidates:", error);
-            let errorMessage = "An error occurred while fetching candidates.";
-            if (error.data && error.data.message) {
-                errorMessage += `\n\nDetails: ${error.data.message}`;
-            } else if (error.message) {
-                errorMessage += `\n\nDetails: ${error.message}`;
-            }
-            alert(errorMessage);
+            handleError(error, "Error fetching candidates.");
             setLoading(false);
         }
     };
@@ -119,14 +109,7 @@ const App = () => {
                 setVotedCandidateIndex(votedIndex.toNumber());
             }
         } catch (error) {
-            console.error("Error checking voting status:", error);
-            let errorMessage = "An error occurred while checking voting status.";
-            if (error.data && error.data.message) {
-                errorMessage += `\n\nDetails: ${error.data.message}`;
-            } else if (error.message) {
-                errorMessage += `\n\nDetails: ${error.message}`;
-            }
-            alert(errorMessage);
+            handleError(error, "Error checking voting status.");
         }
     };
 
@@ -144,14 +127,7 @@ const App = () => {
             setNewCandidate("");
             fetchCandidates(candidateContract);
         } catch (error) {
-            console.error("Error adding candidate:", error);
-            let errorMessage = "An error occurred while adding the candidate.";
-            if (error.data && error.data.message) {
-                errorMessage += `\n\nDetails: ${error.data.message}`;
-            } else if (error.message) {
-                errorMessage += `\n\nDetails: ${error.message}`;
-            }
-            alert(errorMessage);
+            handleError(error, "Error adding candidate.");
         } finally {
             setTransactionInProgress(false);
         }
@@ -178,14 +154,7 @@ const App = () => {
             setVotedCandidateIndex(candidateIndex);
             fetchCandidates(candidateContract);
         } catch (error) {
-            console.error("Error voting:", error);
-            let errorMessage = "An error occurred while processing your vote.";
-            if (error.data && error.data.message) {
-                errorMessage += `\n\nDetails: ${error.data.message}`;
-            } else if (error.message) {
-                errorMessage += `\n\nDetails: ${error.message}`;
-            }
-            alert(errorMessage);
+            handleError(error, "Error voting.");
         } finally {
             setTransactionInProgress(false);
         }
@@ -237,7 +206,7 @@ const App = () => {
                         {walletAddress ? (
                             <p>
                                 Connected wallet: <strong>{walletAddress}</strong><br />
-                                Balance: <strong>{walletBalance}</strong> <br />
+                                Balance: <strong>{walletBalance} ETH</strong> <br />
                                 Network: <strong>{network ? network.name : "Unknown"}</strong>
                             </p>
                         ) : (
