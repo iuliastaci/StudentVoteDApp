@@ -17,6 +17,7 @@ const App = () => {
     const [newCandidate, setNewCandidate] = useState("");
     const [walletBalance, setWalletBalance] = useState(null);
     const [insufficientFundsMessage, setInsufficientFundsMessage] = useState("");
+    const [owner, setOwner] = useState(null);
 
     // Connect to MetaMask
     const connectWallet = async () => {
