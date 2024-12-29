@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,273 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+
+/* General Layout */
+.container {
+  padding: 40px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f1f5f9;
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
+
+/* Header */
+.header {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 40px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+/* Main Grid Layout */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+}
+
+/* Left Panel */
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Wallet Info */
+.walletInfo {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #34495e;
+}
+
+/* Admin Section */
+.adminSection {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.subHeader {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+/* Input Field */
+.input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  background-color: #ecf0f1;
+}
+
+/* Add Button */
+.addButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #2ecc71;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #27ae60;
+}
+
+/* Right Panel */
+.rightPanel {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Candidates List */
+.candidatesList {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Candidate Item */
+.candidateItem {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  color: #2c3e50;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.candidateItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.voteButton {
+  padding: 12px 24px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.voteButton:hover {
+  background-color: #c0392b;
+}
+
+/* Connect Button */
+.connectButton {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.connectButton:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mainGrid {
+      grid-template-columns: 1fr;
+  }
+
+  .rightPanel {
+      margin-top: 20px;
+  }
+}
+
+/* General Candidate Styling */
+.candidateItem {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  color: #2c3e50;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.candidateItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Disabled Candidate */
+.disabledCandidate {
+  background-color: #f0f0f0;
+  color: #a0a0a0;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Highlight Voted Candidate */
+.votedCandidate {
+  background-color: #e0ffe0;
+  color: #2c7a2c;
+  font-weight: bold;
+}
+
+/* General Candidate Styling */
+.candidateItem {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  color: #2c3e50;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.candidateItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Disabled Candidate */
+.disabledCandidate {
+  background-color: #f0f0f0;
+  color: #a0a0a0;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.disabledCandidate:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Highlight Voted Candidate */
+.votedCandidate {
+  background-color: #e0ffe0;
+  color: #2c7a2c;
+  font-weight: bold;
+}
+
+/* General Button Styling */
+.voteButton {
+  padding: 12px 24px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.voteButton:hover {
+  background-color: #2980b9;
+}
+
+/* Disabled Button Styling */
+.voteButton:disabled {
+  background-color: #bdc3c7;
+  color: #7f8c8d;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.voteButton:disabled:hover {
+  background-color: #bdc3c7; /* Prevent hover color change */
+}
+

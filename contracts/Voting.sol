@@ -40,6 +40,11 @@ contract Voting {
 
     // Votează pentru un candidat
     function vote(uint256 candidateIndex) public payable onlyDuringVoting {
+         uint startGas = gasleft();
+    
+        // Logică de vot aici
+    
+        require(spentGas <= 50000, "This transaction consumes too much gas.");
         require(msg.value == 0.01 ether, "Voting requires 0.01 ETH."); // Taxă pentru vot
         require(!hasVoted[msg.sender], "Already voted."); // Verifică dacă a votat deja
         
@@ -50,6 +55,7 @@ contract Voting {
         hasVoted[msg.sender] = true; // Marchează utilizatorul ca fiind votat
 
         emit Voted(msg.sender, candidateIndex); // Emite evenimentul de vot
+        uint spentGas = startGas - gasleft();
     }
 
     // Obține lista candidaților și rezultatele
@@ -98,4 +104,6 @@ contract Voting {
 
         emit WinnerDeclared(winnerName, winnerVoteCount); // Emite evenimentul pentru câștigător
     }
+
+
 }
