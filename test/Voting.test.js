@@ -20,7 +20,7 @@ describe("Voting Contract", function () {
     const tx1 = await candidateRegistry.addCandidate("Candidate 1");
     await tx1.wait();
 
-    const tx2 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    const tx2 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     await tx2.wait();
 
     candidate = await candidateRegistry.getCandidate(0);
@@ -29,15 +29,15 @@ describe("Voting Contract", function () {
 
   it("Should prevent double voting", async function () {
     await candidateRegistry.addCandidate("Candidate 1");
-    await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     await expect(
-      voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") })
+      voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") })
     ).to.be.revertedWith("Already voted.");
   });
 
   it("Should estimate gas for a vote function", async function () {
     await candidateRegistry.addCandidate("Candidate 1");
-    const tx = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    const tx = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     const receipt = await tx.wait();
     console.log(`Gas Used for Voting: ${receipt.gasUsed.toString()}`);
   });
