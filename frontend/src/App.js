@@ -39,6 +39,13 @@ const App = () => {
             setWalletBalance(ethers.utils.formatEther(balance));
 
             try {
+                const ownerAddress = await votingContractInstance.owner();
+                setOwner(ownerAddress);
+                if (ownerAddress && signerAddress) {
+                    setIsAdmin(ownerAddress.toLowerCase() === signerAddress.toLowerCase());
+                } else {
+                    console.error("Owner address or wallet address is null");
+                }
                 fetchCandidates(candidateContractInstance);
                 checkVotingStatus(votingContractInstance, signerAddress);
             } catch (error) {
