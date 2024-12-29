@@ -1,4 +1,4 @@
-export const CANDIDATE_CONTRACT_ADDRESS = "0x45fca3d50e5E6c9ef9911f3B1CCF251cf8d4fd7b";
+export const CANDIDATE_CONTRACT_ADDRESS = "0xBA49f4ABF094A9967174017c87ad8990E850D71F";
 export const CANDIDATE_ABI = [
   {
     "inputs": [],
@@ -119,7 +119,7 @@ export const CANDIDATE_ABI = [
     "type": "function"
   }
 ];
-export const VOTING_CONTRACT_ADDRESS = "0x5FcA054eF35B58F26c30B340a1790F3877FE63C3";
+export const VOTING_CONTRACT_ADDRESS = "0xE9FBCBd8e94A1F9BaEb9043b509213512fd39c96";
 export const VOTING_ABI =[
   {
     "inputs": [
@@ -238,6 +238,25 @@ export const VOTING_ABI =[
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "voter",
+        "type": "address"
+      }
+    ],
+    "name": "getVotedCandidateIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getWinner",
     "outputs": [
@@ -298,6 +317,25 @@ export const VOTING_ABI =[
     "name": "vote",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "votedCandidateIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
