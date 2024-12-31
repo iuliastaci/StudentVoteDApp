@@ -16,11 +16,12 @@ const App = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [newCandidate, setNewCandidate] = useState("");
     const [walletBalance, setWalletBalance] = useState(null);
-    const [insufficientFundsMessage, setInsufficientFundsMessage] = useState("");
     const [owner, setOwner] = useState(null);
     const [network, setNetwork] = useState(null);
     const [transactionInProgress, setTransactionInProgress] = useState(false);
     const [networkError, setNetworkError] = useState("");
+    const [winner, setWinner] = useState({ name: "", voteCount: 0 });
+    const [winnerDeclared, setWinnerDeclared] = useState(false);
 
     const handleError = (error, customMessage) => {
         console.error(customMessage, error);
@@ -67,6 +68,7 @@ const App = () => {
                     }
                     fetchCandidates(candidateContractInstance);
                     checkVotingStatus(votingContractInstance, signerAddress);
+                    checkWinnerDeclared(votingContractInstance);
                 } catch (error) {
                     handleError(error, "Error accessing contract data.");
                 }
@@ -159,6 +161,36 @@ const App = () => {
             setTransactionInProgress(false);
         }
     };
+
+    const checkWinnerDeclared = async (votingContractInstance) => {
+        try {
+            const filter = votingContractInstance.filters.WinnerDeclared();
+            const events = await votingContractInstance.queryFilter(filter);
+            if(events.length > 0) {
+                setWinnerDeclared(true);
+                const winnerData = await votingContractInstance.getWinner();
+                setWinner({ name: winnerData[0], voteCount: winnerData[1].toNumber() });
+            } else {
+                setWinnerDeclared(false);
+            }
+        } catch (error) {
+            handleError(error, "Error checking if winner is declared.");
+        }
+    };
+
+    const declareWinner = async () => {
+        try {
+            setTransactionInProgress(true);
+            const tx = await votingContract.declareWinner();
+            await tx.wait();
+            alert("Winner declared successfully!");
+            checkWinnerDeclared(votingContract);
+        } catch (error) {
+            handleError(error, "Error declaring winner.");
+        } finally {
+            setTransactionInProgress(false);
+        }
+    };
   
     useEffect(() => {
         connectWallet();
@@ -229,6 +261,9 @@ const App = () => {
                             <button className="addButton" onClick={addCandidate} disabled={transactionInProgress}>
                                 {transactionInProgress ? "Processing..." : "Add"}
                             </button>
+                            <button className="declareWinnerButton" onClick={declareWinner} disabled={transactionInProgress}>
+                                {transactionInProgress ? "Processing..." : "Declare Winner"}
+                            </button>
                         </div>
                     )}
                 </section>
@@ -268,6 +303,18 @@ const App = () => {
                             <p>{networkError}</p>
                         </div>
                     )}
+                    <div className="winnerSection">
+                        <h2 className="subHeader">Winner</h2>
+                        <p>
+                            {winnerDeclared ? (
+                                <>
+                                    <strong>{winner.name}</strong> with {winner.voteCount} votes
+                                </>
+                            ) : (
+                                "Winner not declared yet."
+                            )}
+                        </p>
+                    </div>
                 </section>
             </main>
         </div>

@@ -124,6 +124,24 @@
   background-color: #27ae60;
 }
 
+/* Declare Winner button */
+.declareWinnerButton {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  background-color: #2ecc71;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.declareWinnerButton:hover {
+  background-color: #27ae60;
+}
+
 /* Right Panel */
 .rightPanel {
   background-color: #ffffff;
