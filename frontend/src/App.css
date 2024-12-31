@@ -46,6 +46,7 @@
   border-radius: 12px;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 100px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -98,7 +99,7 @@
 
 /* Input Field */
 .input {
-  width: 100%;
+  width: 500px;
   padding: 12px;
   font-size: 16px;
   margin-bottom: 10px;
@@ -121,6 +122,24 @@
 }
 
 .addButton:hover {
+  background-color: #27ae60;
+}
+
+/* Declare Winner button */
+.declareWinnerButton {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  background-color: #2ecc71;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.declareWinnerButton:hover {
   background-color: #27ae60;
 }
 
