@@ -13,6 +13,7 @@ contract Voting {
     mapping(address => bool) public hasVoted;
     mapping(address => uint256) public votedCandidateIndex;
     uint256 public votingDeadline;
+    uint256 public totalVoters;
 
     event Voted(address voter, uint256 candidateIndex);
     event WinnerDeclared(string name, uint256 voteCount);
@@ -43,8 +44,10 @@ contract Voting {
     function vote(uint256 candidateIndex) public payable onlyDuringVoting {
         uint startGas = gasleft();
             
-        require(msg.value == 0.01 ether, "Voting requires 0.01 ETH."); // Taxă pentru vot
+        require(msg.value == 0.00001 ether, "Voting requires 0.00001 ETH."); // Taxă pentru vot
         require(!hasVoted[msg.sender], "Already voted."); // Verifică dacă a votat deja
+        hasVoted[msg.sender] = true;
+        totalVoters += 1;
         
         ICandidateRegistry candidateRegistry = ICandidateRegistry(candidateRegistryAddress);
         require(candidateIndex < candidateRegistry.getCandidatesCount(), "Invalid candidate index."); // Verifică dacă indexul candidatului este valid
@@ -110,6 +113,10 @@ contract Voting {
 
         emit WinnerDeclared(winnerName, winnerVoteCount); // Emite evenimentul pentru câștigător
     }
+
+    function getTotalVoters() public view returns (uint256) {
+        return totalVoters;
+}
 
 
 }

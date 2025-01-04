@@ -1,4 +1,4 @@
-export const CANDIDATE_CONTRACT_ADDRESS = "0xBA49f4ABF094A9967174017c87ad8990E850D71F";
+export const CANDIDATE_CONTRACT_ADDRESS = "0xD2cFC1836084765C95E0439DF1df39D26A5D1A38";
 export const CANDIDATE_ABI = [
   {
     "inputs": [],
@@ -119,7 +119,7 @@ export const CANDIDATE_ABI = [
     "type": "function"
   }
 ];
-export const VOTING_CONTRACT_ADDRESS = "0xE9FBCBd8e94A1F9BaEb9043b509213512fd39c96";
+export const VOTING_CONTRACT_ADDRESS = "0xFDd9ADC56cf6a0DfC3a530a80c2e0f42e827cac0";
 export const VOTING_ABI =[
   {
     "inputs": [
@@ -238,6 +238,19 @@ export const VOTING_ABI =[
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getTotalVoters",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -301,6 +314,19 @@ export const VOTING_ABI =[
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalVoters",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

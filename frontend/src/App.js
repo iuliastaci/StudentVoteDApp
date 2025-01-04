@@ -19,6 +19,7 @@ const App = () => {
     const [owner, setOwner] = useState(null);
     const [network, setNetwork] = useState(null);
     const [transactionInProgress, setTransactionInProgress] = useState(false);
+    const [totalVoters, setTotalVoters] = useState(0);
     const [networkError, setNetworkError] = useState("");
     const [winner, setWinner] = useState({ name: "", voteCount: 0 });
     const [winnerDeclared, setWinnerDeclared] = useState(false);
@@ -48,6 +49,8 @@ const App = () => {
                 setSigner(signerInstance);
                 setCandidateContract(candidateContractInstance);
                 setVotingContract(votingContractInstance);
+                fetchTotalVoters(votingContractInstance);
+                console.log("da")
 
                 const signerAddress = await signerInstance.getAddress();
                 setWalletAddress(signerAddress);
@@ -77,6 +80,18 @@ const App = () => {
             }
         } catch (error) {
             handleError(error, "Error connecting to wallet."); 
+        }
+    };
+
+    const fetchTotalVoters = async (contractInstance) => {
+        if (!contractInstance) return;
+        try {
+            const totalVotersLocal= await contractInstance.getTotalVoters();
+            console.log(contractInstance)
+            console.log("Total Voters:", totalVotersLocal.toNumber());
+            setTotalVoters(totalVotersLocal.toNumber());
+        } catch (error) {
+            console.error("Error fetching total voters:", error);
         }
     };
 
@@ -141,15 +156,15 @@ const App = () => {
             const balance = await provider.getBalance(walletAddress);
             const balanceInEther = ethers.utils.formatEther(balance);
     
-            // Ensure the user has at least 0.01 Ether
-            if (parseFloat(balanceInEther) < 0.01) {
-                alert("Insufficient funds to cast a vote. You need at least 0.01 Ether.");
+            // Ensure the user has at least 0.00001 Ether
+            if (parseFloat(balanceInEther) < 0.00001) {
+                alert("Insufficient funds to cast a vote. You need at least 0.00001 Ether.");
                 return;
             }
     
             // Proceed with voting
             setTransactionInProgress(true);
-            const tx = await votingContract.vote(candidateIndex, { value: ethers.utils.parseEther("0.01") });
+            const tx = await votingContract.vote(candidateIndex, { value: ethers.utils.parseEther("0.00001") });
             await tx.wait();
             alert("Vote submitted successfully!");
             setVoted(true);
@@ -194,6 +209,7 @@ const App = () => {
   
     useEffect(() => {
         connectWallet();
+        
 
         if(window.ethereum) {
             window.ethereum.on("accountsChanged", (accounts) => {
@@ -229,7 +245,7 @@ const App = () => {
     return (
         <div className="container">
             <header className="header">
-                <h1>Decentralized Voting App</h1>
+                <h1>Student Representative Voting App</h1>
             </header>
 
             <main className="mainGrid">
@@ -287,7 +303,7 @@ const App = () => {
                                         : ""
                                 }`}
                             >
-                                <strong>{candidate.name}</strong>: {candidate.voteCount} votes
+                                <strong>{candidate.name}</strong>: {candidate.voteCount} votes {(candidate.voteCount * 100)/totalVoters} %
                                 <button
                                     className="voteButton"
                                     onClick={() => vote(index)}

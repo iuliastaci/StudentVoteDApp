@@ -20,7 +20,7 @@ describe("Voting Contract", function () {
     const tx1 = await candidateRegistry.addCandidate("Candidate 1");
     await tx1.wait();
 
-    const tx2 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    const tx2 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     await tx2.wait();
 
     candidate = await candidateRegistry.getCandidate(0);
@@ -29,15 +29,15 @@ describe("Voting Contract", function () {
 
   it("Should prevent double voting", async function () {
     await candidateRegistry.addCandidate("Candidate 1");
-    await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     await expect(
-      voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") })
+      voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") })
     ).to.be.revertedWith("Already voted.");
   });
 
   it("Should estimate gas for a vote function", async function () {
     await candidateRegistry.addCandidate("Candidate 1");
-    const tx = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    const tx = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     const receipt = await tx.wait();
     console.log(`Gas Used for Voting: ${receipt.gasUsed.toString()}`);
   });
@@ -48,11 +48,11 @@ describe("Voting Contract", function () {
     const tx2 = await candidateRegistry.addCandidate("Candidate 2");
     await tx2.wait();
 
-    const tx3 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    const tx3 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     await tx3.wait();
-    const tx4 = await voting.connect(addr2).vote(1, { value: ethers.parseEther("0.01") });
+    const tx4 = await voting.connect(addr2).vote(1, { value: ethers.parseEther("0.00001") });
     await tx4.wait();
-    const tx5 = await voting.connect(addr3).vote(1, { value: ethers.parseEther("0.01") });
+    const tx5 = await voting.connect(addr3).vote(1, { value: ethers.parseEther("0.00001") });
     await tx5.wait();
 
     // Grabim timpul cu 1 zi
@@ -72,7 +72,7 @@ describe("Voting Contract", function () {
   it("Should not allow declaring winner before voting period ends", async function () {
     const tx1 = await candidateRegistry.addCandidate("Candidate 1");
     await tx1.wait();
-    const tx2 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.01") });
+    const tx2 = await voting.connect(addr1).vote(0, { value: ethers.parseEther("0.00001") });
     await tx2.wait();
 
     await expect(voting.declareWinner()).to.be.revertedWith("Voting period is not over yet.");
