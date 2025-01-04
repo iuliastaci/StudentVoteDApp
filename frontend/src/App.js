@@ -16,12 +16,13 @@ const App = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [newCandidate, setNewCandidate] = useState("");
     const [walletBalance, setWalletBalance] = useState(null);
-    const [insufficientFundsMessage, setInsufficientFundsMessage] = useState("");
     const [owner, setOwner] = useState(null);
     const [network, setNetwork] = useState(null);
     const [transactionInProgress, setTransactionInProgress] = useState(false);
     const [totalVoters, setTotalVoters] = useState(0);
     const [networkError, setNetworkError] = useState("");
+    const [winner, setWinner] = useState({ name: "", voteCount: 0 });
+    const [winnerDeclared, setWinnerDeclared] = useState(false);
 
     const handleError = (error, customMessage) => {
         console.error(customMessage, error);
@@ -49,6 +50,7 @@ const App = () => {
                 setCandidateContract(candidateContractInstance);
                 setVotingContract(votingContractInstance);
                 fetchTotalVoters(votingContractInstance);
+                console.log("da")
 
                 const signerAddress = await signerInstance.getAddress();
                 setWalletAddress(signerAddress);
@@ -69,6 +71,7 @@ const App = () => {
                     }
                     fetchCandidates(candidateContractInstance);
                     checkVotingStatus(votingContractInstance, signerAddress);
+                    checkWinnerDeclared(votingContractInstance);
                 } catch (error) {
                     handleError(error, "Error accessing contract data.");
                 }
@@ -77,6 +80,18 @@ const App = () => {
             }
         } catch (error) {
             handleError(error, "Error connecting to wallet."); 
+        }
+    };
+
+    const fetchTotalVoters = async (contractInstance) => {
+        if (!contractInstance) return;
+        try {
+            const totalVotersLocal= await contractInstance.getTotalVoters();
+            console.log(contractInstance)
+            console.log("Total Voters:", totalVotersLocal.toNumber());
+            setTotalVoters(totalVotersLocal.toNumber());
+        } catch (error) {
+            console.error("Error fetching total voters:", error);
         }
     };
 
@@ -162,18 +177,35 @@ const App = () => {
         }
     };
 
-    const fetchTotalVoters = async (votingContract) => {
-        if (!votingContract) 
-            {console.log("nu e bvoting contrakt")};
+    const checkWinnerDeclared = async (votingContractInstance) => {
         try {
-            const totalVoters = await votingContract.getTotalVoters();
-            console.log("Total Voters:", totalVoters.toNumber());
-            setTotalVoters(totalVoters.toNumber());
+            const filter = votingContractInstance.filters.WinnerDeclared();
+            const events = await votingContractInstance.queryFilter(filter);
+            if(events.length > 0) {
+                setWinnerDeclared(true);
+                const winnerData = await votingContractInstance.getWinner();
+                setWinner({ name: winnerData[0], voteCount: winnerData[1].toNumber() });
+            } else {
+                setWinnerDeclared(false);
+            }
         } catch (error) {
-            console.error("Error fetching total voters:", error);
+            handleError(error, "Error checking if winner is declared.");
         }
     };
 
+    const declareWinner = async () => {
+        try {
+            setTransactionInProgress(true);
+            const tx = await votingContract.declareWinner();
+            await tx.wait();
+            alert("Winner declared successfully!");
+            checkWinnerDeclared(votingContract);
+        } catch (error) {
+            handleError(error, "Error declaring winner.");
+        } finally {
+            setTransactionInProgress(false);
+        }
+    };
   
     useEffect(() => {
         connectWallet();
@@ -213,7 +245,7 @@ const App = () => {
     return (
         <div className="container">
             <header className="header">
-                <h1>Decentralized Voting App</h1>
+                <h1>Student Representative Voting App</h1>
             </header>
 
             <main className="mainGrid">
@@ -245,6 +277,9 @@ const App = () => {
                             <button className="addButton" onClick={addCandidate} disabled={transactionInProgress}>
                                 {transactionInProgress ? "Processing..." : "Add"}
                             </button>
+                            <button className="declareWinnerButton" onClick={declareWinner} disabled={transactionInProgress}>
+                                {transactionInProgress ? "Processing..." : "Declare Winner"}
+                            </button>
                         </div>
                     )}
                 </section>
@@ -268,8 +303,7 @@ const App = () => {
                                         : ""
                                 }`}
                             >
-                                <strong>{candidate.name}</strong>: {candidate.voteCount} votes {(candidate.voteCount * 100)/candidates.length} %
-                                <div>{totalVoters}</div>
+                                <strong>{candidate.name}</strong>: {candidate.voteCount} votes {(candidate.voteCount * 100)/totalVoters} %
                                 <button
                                     className="voteButton"
                                     onClick={() => vote(index)}
@@ -285,6 +319,18 @@ const App = () => {
                             <p>{networkError}</p>
                         </div>
                     )}
+                    <div className="winnerSection">
+                        <h2 className="subHeader">Winner</h2>
+                        <p>
+                            {winnerDeclared ? (
+                                <>
+                                    <strong>{winner.name}</strong> with {winner.voteCount} votes
+                                </>
+                            ) : (
+                                "Winner not declared yet."
+                            )}
+                        </p>
+                    </div>
                 </section>
             </main>
         </div>

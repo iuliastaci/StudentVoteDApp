@@ -114,9 +114,8 @@ contract Voting {
         emit WinnerDeclared(winnerName, winnerVoteCount); // Emite evenimentul pentru câștigător
     }
 
-    // Solidity code in your smart contract
-function getTotalVoters() public view returns (uint256) {
-    return totalVoters;
+    function getTotalVoters() public view returns (uint256) {
+        return totalVoters;
 }
 
 
